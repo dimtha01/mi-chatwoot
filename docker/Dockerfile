@@ -150,3 +150,9 @@ RUN mkdir -p /app/log \
   && touch /app/log/production.log /app/log/development.log
 
 EXPOSE 3000
+# Copiar entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
