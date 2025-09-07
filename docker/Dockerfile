@@ -73,7 +73,9 @@ RUN pnpm i
 
 COPY . /app
 
-RUN mkdir -p /app/log
+# Crear carpeta de logs
+RUN mkdir -p /app/log \
+  && touch /app/log/production.log /app/log/development.log
 
 RUN if [ "$RAILS_ENV" = "production" ]; then \
   SECRET_KEY_BASE=precompile_placeholder RAILS_LOG_TO_STDOUT=enabled bundle exec rake assets:precompile \
@@ -142,5 +144,9 @@ COPY --from=pre-builder /app /app
 COPY --from=pre-builder /app/.git_sha /app/.git_sha
 
 WORKDIR /app
+
+# Asegurar logs disponibles en runtime
+RUN mkdir -p /app/log \
+  && touch /app/log/production.log /app/log/development.log
 
 EXPOSE 3000
